@@ -13,7 +13,7 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'mcoresidence@gmail.com'  # Your sender email
-app.config['MAIL_PASSWORD'] = 'qkctdjrpbsgjnbtsf'         # Gmail app password
+app.config['MAIL_PASSWORD'] = 'lftiiuewhdhfurvs'   # Gmail app password
 app.config['MAIL_DEFAULT_SENDER'] = 'mcoresidence@gmail.com'  # Must match above
 
 mail = Mail(app)
