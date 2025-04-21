@@ -59,7 +59,7 @@ Your Business Name
         """
         mail.send(msg)
 
-        return "Booking received! Confirmation email sent."
+        return render_template("success.html")
 
     return render_template("index.html")
 
