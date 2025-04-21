@@ -9,12 +9,12 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 
 # Email Configuration
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Gmail SMTP server
-app.config['MAIL_PORT'] = 587                # Gmail SMTP port
-app.config['MAIL_USE_TLS'] = True            # Use TLS for security
-app.config['MAIL_USERNAME'] = 'mcoresidencel@gmail.com'   # Replace with your email
-app.config['MAIL_PASSWORD'] = 'qkctdjrpbsgjnbtsf'      # Replace with your Gmail App Password
-app.config['MAIL_DEFAULT_SENDER'] = 'mcoresidence@gmail.com'  # Same email here
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'mcoresidencel@gmail.com'       # Your sending Gmail
+app.config['MAIL_PASSWORD'] = 'qkctdjrpbsgjnbtsf'              # Your Gmail App Password
+app.config['MAIL_DEFAULT_SENDER'] = 'mcoresidencel@gmail.com' # Sender email
 
 mail = Mail(app)
 
@@ -35,7 +35,7 @@ def index():
         time = request.form["time"]
         file = request.files["payment_proof"]
 
-        # Save uploaded proof of payment
+        # Save uploaded file
         filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
@@ -45,10 +45,10 @@ def index():
             writer = csv.writer(f)
             writer.writerow([datetime.now(), name, email, date, time, filename])
 
-        # Create a reference number for the booking
+        # Generate a reference number
         ref_number = f"REF-{datetime.now().strftime('%Y%m%d%H%M%S')}"
 
-        # Send confirmation email to client
+        # Send email to client
         msg = Message("Booking Confirmation", recipients=[email])
         msg.body = f"""
 Hi {name},
@@ -56,36 +56,32 @@ Hi {name},
 Thank you for your booking on {date} at {time}.
 Your reference number is: {ref_number}
 
-We received your proof of payment.
+We’ve received your proof of payment and will contact you soon to confirm your booking.
 
-Kind regards,
-Your Business Name
-        """
-        print("Email would be sent here.")
+Warm regards,  
+MC Residence
+"""
+        mail.send(msg)
 
-        # Send email to admin (you) with booking details
-        admin_email = 'mcoresidence@gmail.com'  # Replace with your admin email
-
+        # Send email to admin (you)
+        admin_email = 'mcoresidence@gmail.com'
         msg_admin = Message("New Booking Received", recipients=[admin_email])
         msg_admin.body = f"""
-New Booking Details:
+📩 New Booking Details:
 
 Name: {name}
 Email: {email}
 Date: {date}
 Time: {time}
 Reference Number: {ref_number}
-Proof of Payment: {file_path}
+Proof of Payment Filename: {filename}
 
-Please check the payment proof and confirm the booking.
-
-Best,
-Your Business Name
+🗂 Check the uploaded file in: static/uploads/{filename}
 """
-        print("Email would be sent here.")
+        mail.send(msg_admin)
 
         return render_template("success.html")
-    
+
     return render_template("index.html")
 
 # Run the app
