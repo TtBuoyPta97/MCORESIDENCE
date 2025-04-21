@@ -66,8 +66,8 @@ MCO Residence
 
         # Send email to admin
         try:
-            msg_admin = Message("New Booking Received", recipients=['mcoresidence@gmail.com'])
-            msg_admin.body = f"""
+           msg_admin = Message("New Booking Received", recipients=[admin_email])
+msg_admin.body = f"""
 New Booking Details:
 
 Name: {name}
@@ -75,12 +75,16 @@ Email: {email}
 Date: {date}
 Time: {time}
 Reference Number: {ref_number}
-Proof of Payment: {file_path}
 
-Please check the proof and confirm the booking.
+Please see the attached proof of payment and confirm the booking.
 
-- MCO Residence
-            """
+Best,
+Your Business Name
+"""
+
+# 🔗 Attach the proof of payment file to the email
+with open(file_path, "rb") as fp:
+    msg_admin.attach(filename, file.content_type, fp.read())
             mail.send(msg_admin)
         except Exception as e:
             print("Error sending email to admin:", e)
