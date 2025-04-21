@@ -1,30 +1,34 @@
 from flask import Flask, render_template, request
 from flask_mail import Mail, Message
-import os
 import csv
 from datetime import datetime
+import os
 from werkzeug.utils import secure_filename
 
+# Initialize Flask app
 app = Flask(__name__)
-UPLOAD_FOLDER = 'static/uploads'
-ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
 
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
-# Email config
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'mcoresidence@gmail.com'       
-app.config['MAIL_PASSWORD'] = 'irfnfvdrlbckaguf'          
-app.config['MAIL_DEFAULT_SENDER'] = 'mcoresidence@gmail.com'
+# Email Configuration
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Gmail SMTP server
+app.config['MAIL_PORT'] = 587                # Gmail SMTP port
+app.config['MAIL_USE_TLS'] = True            # Use TLS for security
+app.config['MAIL_USERNAME'] = 'mcoresidencel@gmail.com'   # Replace with your email
+app.config['MAIL_PASSWORD'] = 'your_app_password'      # Replace with your Gmail App Password
+app.config['MAIL_DEFAULT_SENDER'] = 'mcoresidence@gmail.com'  # Same email here
 
 mail = Mail(app)
 
+# Setup file upload folder
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# Route for index (home page)
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
+        # Get form data
         name = request.form["name"]
         email = request.form["email"]
         date = request.form["date"]
@@ -41,7 +45,7 @@ def index():
             writer = csv.writer(f)
             writer.writerow([datetime.now(), name, email, date, time, filename])
 
-        # Create a reference number
+        # Create a reference number for the booking
         ref_number = f"REF-{datetime.now().strftime('%Y%m%d%H%M%S')}"
 
         # Send confirmation email to client
@@ -59,16 +63,11 @@ Your Business Name
         """
         mail.send(msg)
 
-        return render_template("success.html")
+        # Send email to admin (you) with booking details
+        admin_email = 'mcoresidence@gmail.com'  # Replace with your admin email
 
-
-    return render_template("index.html")
-
-# Send email to the admin with the booking info
-admin_email = 'mcoresidence@gmail.com'  # 🔁 Replace with your admin email
-
-msg_admin = Message("New Booking Received", recipients=[admin_email])
-msg_admin.body = f"""
+        msg_admin = Message("New Booking Received", recipients=[admin_email])
+        msg_admin.body = f"""
 New Booking Details:
 
 Name: {name}
@@ -83,4 +82,12 @@ Please check the payment proof and confirm the booking.
 Best,
 Your Business Name
 """
-mail.send(msg_admin)
+        mail.send(msg_admin)
+
+        return render_template("success.html")
+    
+    return render_template("index.html")
+
+# Run the app
+if __name__ == "__main__":
+    app.run(debug=True)
