@@ -13,7 +13,7 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Gmail SMTP server
 app.config['MAIL_PORT'] = 587                # Gmail SMTP port
 app.config['MAIL_USE_TLS'] = True            # Use TLS for security
 app.config['MAIL_USERNAME'] = 'mcoresidencel@gmail.com'   # Replace with your email
-app.config['MAIL_PASSWORD'] = 'irfnfvdrlbckaguf'      # Replace with your Gmail App Password
+app.config['MAIL_PASSWORD'] = 'qkctdjrpbsgjnbtsf'      # Replace with your Gmail App Password
 app.config['MAIL_DEFAULT_SENDER'] = 'mcoresidence@gmail.com'  # Same email here
 
 mail = Mail(app)
@@ -61,7 +61,7 @@ We received your proof of payment.
 Kind regards,
 Your Business Name
         """
-        mail.send(msg)
+        print("Email would be sent here.")
 
         # Send email to admin (you) with booking details
         admin_email = 'mcoresidence@gmail.com'  # Replace with your admin email
@@ -82,7 +82,7 @@ Please check the payment proof and confirm the booking.
 Best,
 Your Business Name
 """
-        mail.send(msg_admin)
+        print("Email would be sent here.")
 
         return render_template("success.html")
     
