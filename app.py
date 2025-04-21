@@ -19,7 +19,7 @@ app.config['MAIL_DEFAULT_SENDER'] = 'mcoresidence@gmail.com'  # Same email here
 mail = Mail(app)
 
 # Setup file upload folder
-UPLOAD_FOLDER = 'static/uploads'
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static/uploads')
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
