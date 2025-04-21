@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking Successful</title>
+  <meta charset="UTF-8">
+  <title>Booking Successful</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <h1>Thank you for your booking!</h1>
+<body class="success-body">
+  <div class="container">
+    <img src="{{ url_for('static', filename='images/mco logo.png') }}" alt="Company Logo" class="logo">
+    <h1>Thank You for Your Booking!</h1>
     <p>We’ve received your booking details and proof of payment.</p>
     <p>We’ll contact you soon to confirm your booking.</p>
+    <a href="/" class="back-link">← Back to Home</a>
+  </div>
 </body>
 </html>
