@@ -84,5 +84,3 @@ Best,
 Your Business Name
 """
 mail.send(msg_admin)
-
-    
