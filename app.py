@@ -59,7 +59,30 @@ Your Business Name
         """
         mail.send(msg)
 
-        return "Booking received! Confirmation email sent."
+        return render_template("success.html")
+
 
     return render_template("index.html")
+
+# Send email to the admin with the booking info
+admin_email = 'mcoresidence@gmail.com'  # 🔁 Replace with your admin email
+
+msg_admin = Message("New Booking Received", recipients=[admin_email])
+msg_admin.body = f"""
+New Booking Details:
+
+Name: {name}
+Email: {email}
+Date: {date}
+Time: {time}
+Reference Number: {ref_number}
+Proof of Payment: {file_path}
+
+Please check the payment proof and confirm the booking.
+
+Best,
+Your Business Name
+"""
+mail.send(msg_admin)
+
     
