@@ -62,3 +62,4 @@ Your Business Name
         return "Booking received! Confirmation email sent."
 
     return render_template("index.html")
+    
