@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Booking Successful</title>
-  <link rel="stylesheet" href="booking-style.css">
+  <link rel="stylesheet" href="booking-style.css" />
+  <script>
+    // Redirect to home page after 5 seconds
+    setTimeout(function() {
+      window.location.href = 'index.html';
+    }, 5000);
+  </script>
 </head>
 <body>
   <div class="form-container">
-    <h1>Thank You for Your Booking!</h1>
-    <p>Your booking has been successfully received. We will confirm your appointment shortly.</p>
-    <p>You will be redirected back to the booking page in a few seconds. If not, <a href="booking.html">click here</a>.</p>
+    <h1>Booking Confirmed!</h1>
+    <p>Thank you for your booking. We have received your details and will contact you shortly.</p>
+    <p>You will be redirected to the home page shortly.</p>
   </div>
 </body>
 </html>
