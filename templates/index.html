@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCO Residence</title>
+    <title>Book Now - MCO Residence</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* General Styles */
@@ -19,15 +19,13 @@
         .btn { background: #007BFF; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; }
         .btn:hover { background: #0056b3; }
 
-        /* Gallery Section */
-        .section { padding: 40px 20px; max-width: 900px; margin: auto; }
-        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
-        .gallery img { width: 100%; border-radius: 8px; cursor: pointer; transition: transform 0.3s ease; }
-        .gallery img:hover { transform: scale(1.05); }
-
-        /* About and Contact Section */
-        section h2 { font-size: 28px; margin-bottom: 20px; }
-        section p { font-size: 18px; }
+        /* Booking Form Section */
+        .booking-section { padding: 40px 20px; max-width: 600px; margin: auto; background-color: #fff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px; }
+        .booking-section h2 { font-size: 28px; margin-bottom: 20px; text-align: center; }
+        .booking-form { display: flex; flex-direction: column; gap: 15px; }
+        .booking-form input, .booking-form select, .booking-form textarea { padding: 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 4px; width: 100%; }
+        .booking-form input[type="submit"] { background-color: #007BFF; color: white; border: none; cursor: pointer; }
+        .booking-form input[type="submit"]:hover { background-color: #0056b3; }
 
         /* Footer */
         footer { background: #222; color: white; text-align: center; padding: 20px; margin-top: 30px; }
@@ -45,9 +43,7 @@
 <body>
 
 <header>
-    <!-- Logo -->
-    <!-- Ensure that MXO.PNG is uploaded to /static/images/ -->
-    <img src="/static/images/MXO.PNG" alt="MCO Residence Logo" class="logo"> <!-- Replace with your actual logo file -->
+    <img src="/static/images/MXO.PNG" alt="MCO Residence Logo" class="logo">
     <h2>MCO Residence</h2>
     <nav>
         <a href="/">Home</a>
@@ -56,35 +52,38 @@
 </header>
 
 <section class="hero">
-    <h1>Welcome to MCO Residence</h1>
-    <p>Your comfort is our priority. Enjoy peace, privacy, and convenience.</p>
+    <h1>Book Your Stay</h1>
+    <p>Secure your room today and enjoy a comfortable stay at MCO Residence.</p>
     <a href="/booking" class="btn">Book Now</a>
 </section>
 
-<section class="section" id="gallery">
-    <h2>Gallery</h2>
-    <div class="gallery">
-        <!-- Replace with your image file names in /static/images/ -->
-        <img src="/static/images/A.jpg" alt="View 1">
-        <img src="/static/images/B.jpg" alt="View 2">
-        <img src="/static/images/C.jpg" alt="View 3">
-        <img src="/static/images/D.jpg" alt="View 4">
-        <img src="/static/images/E.jpg" alt="View 5">
-        <img src="/static/images/F.jpg" alt="View 6">
-        <img src="/static/images/G.jpg" alt="View 7">
-    </div>
-</section>
+<section class="booking-section">
+    <h2>Make a Reservation</h2>
+    <form class="booking-form">
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="name" placeholder="Your Name" required>
 
-<section class="section" id="about">
-    <h2>About Us</h2>
-    <p>MCO Residence is your ideal short-stay home. Located in a safe and quiet area, we offer clean and affordable rooms, perfect for travelers and guests seeking rest and comfort.</p>
-</section>
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" name="email" placeholder="Your Email" required>
 
-<section class="section" id="contact">
-    <h2>Contact Us</h2>
-    <p><strong>Phone:</strong> +27 78 151 7631</p>
-    <p><strong>Email:</strong> mcoresidence@gmail.com</p>
-    <p><strong>Address:</strong> Magwa road, Lusikisiki 4820</p>
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" placeholder="Your Phone Number" required>
+
+        <label for="checkin">Check-in Date:</label>
+        <input type="date" id="checkin" name="checkin" required>
+
+        <label for="checkout">Check-out Date:</label>
+        <input type="date" id="checkout" name="checkout" required>
+
+        <label for="room">Select Room Type:</label>
+        <select id="room" name="room" required>
+            <option value="single">Single Room</option>
+            <option value="double">Double Room</option>
+            <option value="suite">Suite</option>
+        </select>
+
+        <input type="submit" value="Submit Reservation">
+    </form>
 </section>
 
 <footer>
