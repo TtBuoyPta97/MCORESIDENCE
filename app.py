@@ -12,9 +12,9 @@ app = Flask(__name__)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'mcoresidence@gmail.com'  # Your sender email
-app.config['MAIL_PASSWORD'] = 'lftiiuewhdhfurvs'   # Gmail app password
-app.config['MAIL_DEFAULT_SENDER'] = 'mcoresidence@gmail.com'  # Must match above
+app.config['MAIL_USERNAME'] = 'mcoresidence@gmail.com'
+app.config['MAIL_PASSWORD'] = 'lftiiuewhdhfurvs'
+app.config['MAIL_DEFAULT_SENDER'] = 'mcoresidence@gmail.com'
 
 mail = Mail(app)
 
@@ -23,6 +23,9 @@ UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static/uploads')
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# Admin email to receive attachments
+admin_email = 'mcoresidence@gmail.com'  # Or change to a different admin email
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -64,10 +67,10 @@ MCO Residence
         except Exception as e:
             print("Error sending email to client:", e)
 
-        # Send email to admin
+        # Send email to admin with attachment
         try:
-           msg_admin = Message("New Booking Received", recipients=[admin_email])
-msg_admin.body = f"""
+            msg_admin = Message("New Booking Received", recipients=[admin_email])
+            msg_admin.body = f"""
 New Booking Details:
 
 Name: {name}
@@ -79,12 +82,10 @@ Reference Number: {ref_number}
 Please see the attached proof of payment and confirm the booking.
 
 Best,
-Your Business Name
-"""
-
-# 🔗 Attach the proof of payment file to the email
-with open(file_path, "rb") as fp:
-    msg_admin.attach(filename, file.content_type, fp.read())
+MCO Residence
+            """
+            with open(file_path, "rb") as fp:
+                msg_admin.attach(filename, file.content_type, fp.read())
             mail.send(msg_admin)
         except Exception as e:
             print("Error sending email to admin:", e)
