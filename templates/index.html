@@ -1,58 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>MCO Residence</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: Arial; margin: 0; padding: 0; }
-        header, footer { background-color: #003366; color: white; text-align: center; padding: 1em; }
-        section { padding: 20px; }
-        .gallery img { width: 200px; margin: 10px; border-radius: 10px; }
-        .social a { margin: 10px; }
-        .btn { padding: 10px 20px; background: green; color: white; text-decoration: none; border-radius: 5px; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
+        header { background: #333; color: white; padding: 20px; text-align: center; }
+        nav a { color: white; margin: 0 15px; text-decoration: none; }
+        .hero { padding: 50px; text-align: center; background: #555; color: white; }
+        .hero h1 { font-size: 40px; margin-bottom: 10px; }
+        .section { padding: 40px 20px; max-width: 900px; margin: auto; }
+        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .gallery img { width: 100%; border-radius: 8px; }
+        .btn { background: #007BFF; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; }
+        .btn:hover { background: #0056b3; }
+        footer { background: #222; color: white; text-align: center; padding: 20px; margin-top: 30px; }
+        .social a { color: white; margin: 0 10px; font-size: 20px; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Welcome to MCO Residence</h1>
+    <h2>MCO Residence</h2>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/booking">Book Now</a>
+    </nav>
 </header>
 
-<section>
-    <h2>About Us</h2>
-    <p>We offer peaceful and quality accommodation with love and care. Our guests come first!</p>
+<section class="hero">
+    <h1>Welcome to MCO Residence</h1>
+    <p>Your comfort is our priority. Enjoy peace, privacy and convenience.</p>
+    <a href="/booking" class="btn">Book Now</a>
 </section>
 
-<section>
+<section class="section" id="gallery">
     <h2>Gallery</h2>
     <div class="gallery">
         <img src="/static/images/room1.jpg" alt="Room 1">
         <img src="/static/images/room2.jpg" alt="Room 2">
-        <img src="/static/images/livingroom.jpg" alt="Living Room">
-        <!-- Add more images as needed -->
+        <img src="/static/images/lounge.jpg" alt="Lounge">
+        <img src="/static/images/bathroom.jpg" alt="Bathroom">
     </div>
 </section>
 
-<section>
-    <h2>Book Now</h2>
-    <a class="btn" href="/">Go to Booking Form</a>
+<section class="section" id="about">
+    <h2>About Us</h2>
+    <p>MCO Residence is your ideal short-stay home. Located in a safe and quiet area, we offer clean and affordable rooms, perfect for travelers and guests seeking rest and comfort.</p>
 </section>
 
-<section>
+<section class="section" id="contact">
     <h2>Contact Us</h2>
-    <p>Phone: 012 345 6789</p>
-    <p>Email: mcoresidence@gmail.com</p>
-    <p>Location: 123 MCO Street, Pretoria, South Africa</p>
-</section>
-
-<section class="social">
-    <h2>Follow Us</h2>
-    <a href="https://wa.me/your-number">WhatsApp</a>
-    <a href="https://facebook.com/yourpage">Facebook</a>
-    <a href="https://instagram.com/yourpage">Instagram</a>
+    <p><strong>Phone:</strong> +27 123 456 789</p>
+    <p><strong>Email:</strong> mcoresidence@gmail.com</p>
+    <p><strong>Address:</strong> 123 Comfort Lane, Johannesburg</p>
 </section>
 
 <footer>
-    <p>&copy; 2025 MCO Residence</p>
+    <div class="social">
+        <a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://wa.me/yourwhatsapplink" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    </div>
+    <p>&copy; 2025 MCO Residence. All rights reserved.</p>
 </footer>
 
 </body>
