@@ -129,16 +129,26 @@
 
 <section class="section" id="gallery">
   <h2>Gallery</h2>
-  <div class="gallery">
-    <img src="/static/images/bed.jpg" alt="View 1">
-    <img src="/static/images/bed ii.jpg" alt="View 2">
-    <img src="/static/images/tv.jpg" alt="View 3">
-    <img src="/static/images/bed & shower.jpg" alt="View 4">
-    <img src="/static/images/shower.jpg" alt="View 5">
-    <img src="/static/images/outside.jpg" alt="View 6">
-    <img src="/static/images/room.jpg" alt="View 7">
+  <div class="slider-container">
+    <div class="slider">
+      <img src="/static/images/A.jpg" alt="A" class="slide active" onclick="openLightbox(this.src)">
+      <img src="/static/images/B.jpg" alt="B" class="slide" onclick="openLightbox(this.src)">
+      <img src="/static/images/C.jpg" alt="C" class="slide" onclick="openLightbox(this.src)">
+      <img src="/static/images/D.jpg" alt="D" class="slide" onclick="openLightbox(this.src)">
+      <img src="/static/images/E.jpg" alt="E" class="slide" onclick="openLightbox(this.src)">
+      <img src="/static/images/F.jpg" alt="F" class="slide" onclick="openLightbox(this.src)">
+      <img src="/static/images/G.jpg" alt="G" class="slide" onclick="openLightbox(this.src)">
+    </div>
+    <button class="prev" onclick="moveSlide(-1)">❮</button>
+    <button class="next" onclick="moveSlide(1)">❯</button>
+  </div>
+
+  <!-- Lightbox View -->
+  <div id="lightbox" onclick="closeLightbox()">
+    <img id="lightbox-img" src="" alt="Large view">
   </div>
 </section>
+
 
 <section class="section" id="about">
   <h2>About Us</h2>
