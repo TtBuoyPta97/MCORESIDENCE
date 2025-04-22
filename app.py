@@ -92,7 +92,7 @@ MCO Residence
 
         return render_template("success.html")
 
-    return render_template("index.html")
+    return render_template("booking.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
