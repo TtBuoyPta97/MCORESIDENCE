@@ -1,22 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Booking Successful</title>
-  <link rel="stylesheet" href="booking-style.css" />
-  <script>
-    // Redirect to home page after 5 seconds
-    setTimeout(function() {
-      window.location.href = 'index.html';
-    }, 5000);
-  </script>
+    <meta charset="UTF-8">
+    <title>Booking Successful</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='booking-style.css') }}">
 </head>
 <body>
-  <div class="form-container">
-    <h1>Booking Confirmed!</h1>
-    <p>Thank you for your booking. We have received your details and will contact you shortly.</p>
-    <p>You will be redirected to the home page shortly.</p>
-  </div>
+    <div class="container">
+        <h1>Booking Confirmed!</h1>
+        <p>Thank you for your booking. A confirmation email has been sent to you.</p>
+        <a href="{{ url_for('homepage') }}">Return to Home</a>
+    </div>
 </body>
 </html>
