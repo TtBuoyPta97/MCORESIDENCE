@@ -1,32 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Book Your Appointment</title>
-  <link rel="stylesheet" href="booking-style.css" />
+    <meta charset="UTF-8">
+    <title>Booking Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='booking-style.css') }}">
 </head>
 <body>
-  <div class="form-container">
-    <h1>Book Your Appointment</h1>
-    <form action="success.html" method="POST" enctype="multipart/form-data">
-      <label for="name">Full Name</label>
-      <input type="text" id="name" name="name" placeholder="John Doe" required />
+    <div class="container">
+        <h1>Make a Booking</h1>
+        <form action="{{ url_for('booking') }}" method="POST" enctype="multipart/form-data">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required>
 
-      <label for="email">Email Address</label>
-      <input type="email" id="email" name="email" placeholder="johndoe@example.com" required />
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" required>
 
-      <label for="payment-proof">Proof of Payment</label>
-      <input type="file" id="payment-proof" name="payment-proof" accept="image/*,application/pdf" required />
+            <label for="date">Booking Date:</label>
+            <input type="date" id="date" name="date" required>
 
-      <label for="appointment-date">Appointment Date</label>
-      <input type="date" id="appointment-date" name="appointment-date" required />
+            <label for="time">Booking Time:</label>
+            <input type="time" id="time" name="time" required>
 
-      <label for="appointment-time">Appointment Time</label>
-      <input type="time" id="appointment-time" name="appointment-time" required />
+            <label for="payment_proof">Proof of Payment:</label>
+            <input type="file" id="payment_proof" name="payment_proof" accept=".pdf,.png,.jpg,.jpeg" required>
 
-      <button type="submit">Confirm Booking</button>
-    </form>
-  </div>
+            <button type="submit">Submit Booking</button>
+        </form>
+    </div>
 </body>
 </html>
