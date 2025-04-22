@@ -2,16 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Booking Successful</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <!-- Auto-redirect to booking page after 5 seconds -->
+  <meta http-equiv="refresh" content="5; url=booking.html">
+
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="success-body">
-  <div class="container">
-    <img src="{{ url_for('static', filename='images/mco logo.png') }}" alt="Company Logo" class="logo">
+<body>
+  <div class="container success">
     <h1>Thank You for Your Booking!</h1>
-    <p>We’ve received your booking details and proof of payment.</p>
-    <p>We’ll contact you soon to confirm your booking.</p>
-    <a href="/" class="back-link">← Back to Home</a>
+    <p>Your booking has been successfully received. We will confirm your stay shortly.</p>
+    <p>You will be redirected back to the booking page in a few seconds. If not, <a href="booking.html">click here</a>.</p>
   </div>
 </body>
 </html>
