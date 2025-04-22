@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Booking Page</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Your Stay</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
     <h1>Book Your Stay</h1>
-    <form action="/book" method="post">
+    <form action="/success" method="post">
       <label for="name">Full Name:</label>
       <input type="text" id="name" name="name" required>
 
@@ -29,3 +30,4 @@
   </div>
 </body>
 </html>
+
