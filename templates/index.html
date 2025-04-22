@@ -1,245 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MCO Residence</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(to bottom, #f0f8ff, #e0f7fa);
-    }
-
-    header {
-      background: #007BFF;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-
-    nav a {
-      color: white;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .hero {
-      padding: 60px 20px;
-      text-align: center;
-      background: linear-gradient(to right, #007BFF, #00c6ff);
-      color: white;
-    }
-
-    .hero h1 {
-      font-size: 42px;
-      margin-bottom: 10px;
-    }
-
-    .section {
-      padding: 40px 20px;
-      max-width: 900px;
-      margin: auto;
-    }
-
-    .btn {
-      background: #ff6f00;
-      color: white;
-      padding: 15px 25px;
-      text-decoration: none;
-      border-radius: 5px;
-      font-weight: bold;
-    }
-
-    .btn:hover {
-      background: #e65100;
-    }
-
-    .slider-container {
-      position: relative;
-      max-width: 800px;
-      margin: 20px auto;
-      overflow: hidden;
-      border-radius: 10px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .slider {
-      display: flex;
-      transition: transform 0.5s ease-in-out;
-    }
-
-    .slide {
-      min-width: 100%;
-      cursor: pointer;
-      display: none;
-    }
-
-    .slide.active {
-      display: block;
-    }
-
-    .prev,
-    .next {
-      position: absolute;
-      top: 45%;
-      background-color: rgba(0, 0, 0, 0.6);
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      font-size: 20px;
-      cursor: pointer;
-      border-radius: 50%;
-      transform: translateY(-50%);
-    }
-
-    .prev {
-      left: 10px;
-    }
-
-    .next {
-      right: 10px;
-    }
-
-    #lightbox {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.9);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-    }
-
-    #lightbox img {
-      max-width: 90%;
-      max-height: 90%;
-      border-radius: 10px;
-    }
-
-    footer {
-      background: #222;
-      color: white;
-      text-align: center;
-      padding: 20px;
-      margin-top: 30px;
-    }
-
-    .social a {
-      color: white;
-      margin: 0 10px;
-      font-size: 20px;
-    }
-
-    @media (max-width: 768px) {
-      .hero h1 {
-        font-size: 30px;
-      }
-
-      .btn {
-        padding: 12px 20px;
-      }
-
-      nav a {
-        display: block;
-        margin: 10px 0;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>MCO Residence</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
-  <header>
+
+<header>
     <h2>MCO Residence</h2>
     <nav>
-      <a href="/">Home</a>
-      <a href="/booking">Book Now</a>
+        <a href="/">Home</a>
+        <a href="/booking">Book Now</a>
     </nav>
-  </header>
+</header>
 
-  <section class="hero">
+<section class="hero">
     <h1>Welcome to MCO Residence</h1>
     <p>Your comfort is our priority. Enjoy peace, privacy, and convenience.</p>
     <a href="/booking" class="btn">Book Now</a>
-  </section>
+</section>
 
-  <section class="section" id="gallery">
+<section class="section" id="gallery">
     <h2>Gallery</h2>
-    <div class="slider-container">
-      <div class="slider" id="slider">
-        <img src="/static/images/A.jpg" class="slide active" alt="Image A" onclick="openLightbox(this.src)" />
-        <img src="/static/images/B.jpg" class="slide" alt="Image B" onclick="openLightbox(this.src)" />
-        <img src="/static/images/C.jpg" class="slide" alt="Image C" onclick="openLightbox(this.src)" />
-        <img src="/static/images/D.jpg" class="slide" alt="Image D" onclick="openLightbox(this.src)" />
-        <img src="/static/images/E.jpg" class="slide" alt="Image E" onclick="openLightbox(this.src)" />
-        <img src="/static/images/F.jpg" class="slide" alt="Image F" onclick="openLightbox(this.src)" />
-        <img src="/static/images/G.jpg" class="slide" alt="Image G" onclick="openLightbox(this.src)" />
-      </div>
-      <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
-      <button class="next" onclick="moveSlide(1)">&#10095;</button>
+    <div class="slider">
+        <button class="slide-btn" onclick="moveSlide(-1)">&#10094;</button>
+        <div class="slide-container">
+            <img src="/static/images/A.jpg" class="slide" onclick="openLightbox(this.src)">
+            <img src="/static/images/B.jpg" class="slide" onclick="openLightbox(this.src)">
+            <img src="/static/images/C.jpg" class="slide" onclick="openLightbox(this.src)">
+            <img src="/static/images/D.jpg" class="slide" onclick="openLightbox(this.src)">
+            <img src="/static/images/E.jpg" class="slide" onclick="openLightbox(this.src)">
+            <img src="/static/images/F.jpg" class="slide" onclick="openLightbox(this.src)">
+            <img src="/static/images/G.jpg" class="slide" onclick="openLightbox(this.src)">
+        </div>
+        <button class="slide-btn" onclick="moveSlide(1)">&#10095;</button>
     </div>
-    <div id="lightbox" onclick="this.style.display='none'">
-      <img src="" id="lightbox-img" />
-    </div>
-  </section>
+</section>
 
-  <section class="section" id="about">
+<section class="section" id="about">
     <h2>About Us</h2>
     <p>MCO Residence is your ideal short-stay home. Located in a safe and quiet area, we offer clean and affordable rooms, perfect for travelers and guests seeking rest and comfort.</p>
-  </section>
+</section>
 
-  <section class="section" id="contact">
+<section class="section" id="contact">
     <h2>Contact Us</h2>
     <p><strong>Phone:</strong> +27 78 151 7631</p>
     <p><strong>Email:</strong> mcoresidence@gmail.com</p>
     <p><strong>Address:</strong> Magwa Road, Lusikisiki 4820</p>
     <iframe
-      src="https://maps.google.com/maps?q=Lusikisiki&t=&z=13&ie=UTF8&iwloc=&output=embed"
-      width="100%"
-      height="300"
-      frameborder="0"
-      style="border:0; border-radius: 10px;"
-      allowfullscreen=""
-      loading="lazy"
-    ></iframe>
-  </section>
+        src="https://www.google.com/maps?q=Magwa+Road+Lusikisiki+4820&output=embed"
+        width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy">
+    </iframe>
+</section>
 
-  <footer>
+<footer>
     <div class="social">
-      <a href="https://www.facebook.com/profile.php?id=61571083425343" target="_blank"><i class="fab fa-facebook"></i></a>
-      <a href="https://www.tiktok.com/@mco0021" target="_blank"><i class="fab fa-tiktok"></i></a>
-      <a href="https://wa.me/qr/4ZPX7LNRALZJG1" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://www.facebook.com/profile.php?id=61571083425343" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.tiktok.com/@mco0021" target="_blank"><i class="fab fa-tiktok"></i></a>
+        <a href="https://wa.me/qr/4ZPX7LNRALZJG1" target="_blank"><i class="fab fa-whatsapp"></i></a>
     </div>
     <p>&copy; 2025 MCO Residence. All rights reserved.</p>
-  </footer>
+</footer>
 
-  <script>
-    let currentSlide = 0;
-    const slides = document.querySelectorAll(".slide");
+<!-- Lightbox Modal -->
+<div id="lightbox" class="lightbox" onclick="this.style.display='none'">
+    <img id="lightbox-img" src="">
+</div>
 
-    function showSlide(index) {
-      slides.forEach((slide) => slide.classList.remove("active"));
-      slides[index].classList.add("active");
-    }
-
-    function moveSlide(n) {
-      currentSlide += n;
-      if (currentSlide < 0) currentSlide = slides.length - 1;
-      if (currentSlide >= slides.length) currentSlide = 0;
-      showSlide(currentSlide);
-    }
-
-    function openLightbox(src) {
-      document.getElementById("lightbox-img").src = src;
-      document.getElementById("lightbox").style.display = "flex";
-    }
-  </script>
+<script src="/script.js"></script>
 </body>
 </html>
