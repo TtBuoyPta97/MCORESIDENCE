@@ -1,6 +1,11 @@
+/* booking-style.css */
+
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+
 /* Global Styles */
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: 'Inter', sans-serif;
   background-color: #f4f7fc;
   margin: 0;
   padding: 0;
@@ -17,10 +22,10 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 500px;
+  text-align: center;
 }
 
 h1 {
-  text-align: center;
   color: #333;
   margin-bottom: 20px;
 }
@@ -28,6 +33,7 @@ h1 {
 form {
   display: flex;
   flex-direction: column;
+  text-align: left;
 }
 
 label {
@@ -47,6 +53,8 @@ input[type="file"] {
   border-radius: 4px;
   font-size: 16px;
   color: #333;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 button {
@@ -62,4 +70,9 @@ button {
 
 button:hover {
   background-color: #0056b3;
+}
+
+p {
+  color: #555;
+  font-size: 16px;
 }
