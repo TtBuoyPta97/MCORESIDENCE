@@ -109,7 +109,7 @@ Proof of payment attached.
                 writer.writerow([datetime.now(), name, email, date, time, "N/A", payment_method])
 
             # Redirect to PayFast
-            payfast_url = f"https://www.payfast.co.za/eng/process?merchant_id=YOUR_ID&merchant_key=YOUR_KEY&amount=100.00&item_name=MCO_Booking&email_address={email}&return_url=http://localhost:5000/success"
+            payfast_url = f"https://www.payfast.co.za/eng/process?merchant_id=14070761&merchant_key=t9gho8csdpkwd&amount=100.00&item_name=MCO_Booking&email_address={email}&return_url=http://localhost:5000/success"
             return redirect(payfast_url)
 
     return render_template("booking.html")
