@@ -23,6 +23,13 @@ ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+# Banking details
+BANK_DETAILS = """
+Amangcikwa Holdings PTY Ltd.
+Account Number: 10233031039
+Bank: Standard Bank
+"""
+
 # ✅ Homepage
 @app.route("/")
 def homepage():
@@ -60,6 +67,9 @@ Thank you for your booking on {date} at {time}.
 Your reference number is: {ref_number}
 
 We received your proof of payment.
+
+Banking details for your manual payment:
+{BANK_DETAILS}
 
 Kind regards,  
 MCO Residence
