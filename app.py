@@ -16,18 +16,14 @@ app.config['MAIL_PASSWORD'] = 'lftiiuewhdhfurvs'
 app.config['MAIL_DEFAULT_SENDER'] = 'mcoresidence@gmail.com'
 mail = Mail(app)
 
-# Upload setup
-UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static/uploads')
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
+# Upload setup (We are not using this anymore, so we can remove it)
+# UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static/uploads')
+# os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+# ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
 
 # WhatsApp link
 WHATSAPP_LINK = "https://wa.me/qr/4ZPX7LNRALZJG1"
-
-@app.route("/")
-def home():
-    return render_template("index.html")  # Change this to the homepage template
 
 @app.route("/booking", methods=["POST", "GET"])
 def booking():
@@ -68,12 +64,8 @@ def booking():
 
             total_cost = rate * duration
 
-            filename = "N/A"
-            if payment_method == "manual":
-                file = request.files.get("payment_proof")
-                if file and file.filename:
-                    filename = secure_filename(file.filename)
-                    file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+            # Don't worry about file upload now
+            filename = None  # No file upload anymore
 
             ref_number = f"REF-{datetime.now().strftime('%Y%m%d%H%M%S')}"
 
@@ -81,9 +73,9 @@ def booking():
             with open("bookings.csv", "a", newline="") as f:
                 writer = csv.writer(f)
                 writer.writerow([datetime.now(), name, email, cell_number, booking_type, checkin_datetime,
-                                 checkout_datetime, payment_method, total_cost, filename, ref_number, special_note])
+                                 checkout_datetime, payment_method, total_cost, filename, ref_number])
 
-            # Email to client
+            # Email client with booking details
             msg = Message("MCO Booking Confirmation", recipients=[email])
             msg.body = f"""
             Hi {name},
@@ -97,7 +89,7 @@ def booking():
 
             Payment Method: {payment_method.title()}
 
-            Special Notes: {special_note}
+            Special Note: {special_note}
 
             Banking details (for manual payment):
             Amangcikwa Holdings PTY Ltd.
@@ -110,6 +102,27 @@ def booking():
             MCO Residence
             """
             mail.send(msg)
+
+            # If manual payment, email proof to owner (you)
+            if payment_method == "manual":
+                file = request.files.get("payment_proof")
+                if file and file.filename:
+                    msg_owner = Message("MCO Payment Proof", recipients=["your_email@example.com"])  # Change to your email
+                    msg_owner.body = f"""
+                    Proof of payment for booking reference: {ref_number}
+
+                    Client Details:
+                    Name: {name}
+                    Email: {email}
+                    Cell Number: {cell_number}
+                    Booking Type: {booking_type}
+                    Total Cost: R{total_cost}
+                    Special Note: {special_note}
+
+                    Please check the attached payment proof.
+                    """
+                    msg_owner.attach(file.filename, file.content_type, file.read())
+                    mail.send(msg_owner)
 
             return render_template("summary.html",
                 name=name,
@@ -128,17 +141,6 @@ def booking():
             return "Something went wrong. Please check your input or try again later.", 400
 
     return render_template("booking.html")  # Renders the booking page when GET request is made
-
-
-@app.route("/payment", methods=["GET"])
-def payment():
-    return render_template("payment.html")
-
-
-@app.route("/success")
-def success():
-    return render_template("success.html")
-
 
 if __name__ == "__main__":
     app.run(debug=True)
