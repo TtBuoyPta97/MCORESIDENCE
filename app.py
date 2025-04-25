@@ -34,16 +34,19 @@ def booking():
     if request.method == "POST":
         try:
             # Get form data
-            name = request.form["name"]
-            email = request.form["email"]
-            booking_type = request.form["booking_type"]
-            checkin_date = request.form["checkin_date"]
-            checkin_time = request.form["checkin_time"]
-            payment_method = request.form["payment_method"]
-            pickup = request.form["pickup"]
+            name = request.form.get("name")
+            email = request.form.get("email")
+            booking_type = request.form.get("booking_type")
+            checkin_date = request.form.get("checkin_date")
+            checkin_time = request.form.get("checkin_time")
+            payment_method = request.form.get("payment_method")
+            pickup = request.form.get("pickup")
             pickup_location = request.form.get("pickup_location", "")
             early_checkin = request.form.get("early_checkin", "no")
             special_note = request.form.get("special_note", "")
+
+            if not all([name, email, booking_type, checkin_date, checkin_time, payment_method, pickup]):
+                return "Missing required form fields. Please check your input.", 400
 
             checkin_datetime = datetime.strptime(f"{checkin_date} {checkin_time}", "%Y-%m-%dT%H:%M")
 
@@ -57,7 +60,9 @@ def booking():
                 rate = 250
                 checkout_datetime = checkin_datetime + timedelta(hours=2)
             elif booking_type == "night":
-                checkout_date = request.form["checkout_date"]
+                checkout_date = request.form.get("checkout_date")
+                if not checkout_date:
+                    return "Checkout date is required for night bookings.", 400
                 checkout_datetime = datetime.strptime(f"{checkout_date} 11:00", "%Y-%m-%d %H:%M")
                 nights = (checkout_datetime.date() - checkin_datetime.date()).days
                 nights = max(1, nights)
@@ -129,7 +134,7 @@ def booking():
 
         except Exception as e:
             print("Booking error:", e)
-            return "Something went wrong. Please check your input or try again later.", 400
+            return f"Something went wrong: {str(e)}. Please check your input or try again later.", 400
 
     return render_template("booking.html")
 
