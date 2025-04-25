@@ -2,134 +2,80 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCO Residence</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>MCO Residence Booking</title>
     <style>
-        /* General Styles */
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
-        header { background: #333; color: white; padding: 20px; text-align: center; }
-        header .logo { width: 150px; height: auto; margin-bottom: 10px; }
-        header nav a { color: white; margin: 0 15px; text-decoration: none; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        .gallery { width: 100%; max-height: 300px; overflow: hidden; position: relative; }
+        .gallery img { width: 100%; height: auto; display: none; }
+        .gallery img.active { display: block; }
 
-        /* Hero Section */
-        .hero { padding: 50px; text-align: center; background: linear-gradient(to right, #ff7e5f, #feb47b); color: white; }
-        .hero h1 { font-size: 40px; margin-bottom: 10px; }
-        .hero p { font-size: 20px; margin-bottom: 20px; }
-        .btn { background: #007BFF; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; }
-        .btn:hover { background: #0056b3; }
-
-        /* Gallery Section */
-        .section { padding: 40px 20px; max-width: 900px; margin: auto; }
-        .gallery { display: flex; overflow: hidden; width: 100%; }
-        .gallery img { width: 100%; max-height: 400px; object-fit: cover; border-radius: 8px; cursor: pointer; transition: transform 0.3s ease; }
-        .gallery img:hover { transform: scale(1.05); }
-        .slider-container { position: relative; }
-        .prev, .next { position: absolute; top: 50%; font-size: 24px; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 10px; cursor: pointer; z-index: 10; }
-        .prev { left: 10px; }
-        .next { right: 10px; }
-        
-        /* About and Contact Section */
-        section h2 { font-size: 28px; margin-bottom: 20px; }
-        section p { font-size: 18px; }
-
-        /* Footer */
-        footer { background: #222; color: white; text-align: center; padding: 20px; margin-top: 30px; }
-        footer .social a { color: white; margin: 0 10px; font-size: 20px; }
-
+        .form-container { padding: 20px; }
+        label { display: block; margin-top: 10px; }
+        input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; }
+        button { margin-top: 20px; padding: 10px 20px; }
     </style>
 </head>
 <body>
 
-<header>
-    <img src="/static/images/mxo.png" alt="MCO Residence Logo" class="logo">
-    <h2>MCO Residence</h2>
-    <nav>
-        <a href="/">Home</a>
-        <a href="/booking">Book Now</a>
-    </nav>
-</header>
-
-<section class="hero">
-    <h1>Welcome to MCO Residence</h1>
-    <p>Your comfort is our priority. Enjoy peace, privacy, and convenience.</p>
-    <a href="/booking" class="btn">Book Now</a>
-</section>
-
-<section class="section" id="gallery">
-    <h2>Gallery</h2>
-    <div class="slider-container">
-        <div class="gallery">
-            <img src="/static/images/a.JPG" alt="View 1">
-            <img src="/static/images/b.JPG" alt="View 2">
-            <img src="/static/images/c.JPG" alt="View 3">
-            <img src="/static/images/d.JPG" alt="View 4">
-            <img src="/static/images/e.JPG" alt="View 5">
-            <img src="/static/images/f.JPG" alt="View 6">
-            <img src="/static/images/g.JPG" alt="View 7">
-        </div>
-        <span class="prev">&#10094;</span>
-        <span class="next">&#10095;</span>
+    <!-- SLIDING GALLERY -->
+    <div class="gallery">
+        <img src="{{ url_for('static', filename='images/image1.jpg') }}" class="active">
+        <img src="{{ url_for('static', filename='images/image2.jpg') }}">
+        <img src="{{ url_for('static', filename='images/image3.jpg') }}">
     </div>
-</section>
 
-<section class="section" id="about">
-    <h2>About Us</h2>
-    <p>MCO Residence is your ideal short-stay home. Located in a safe and quiet area, we offer clean and affordable rooms, perfect for travelers and guests seeking rest and comfort.</p>
-</section>
+    <!-- BOOKING FORM PREVIEW -->
+    <div class="form-container">
+        <h2>Book Your Stay</h2>
+        <form method="POST" action="/booking">
+            <label for="name">Name</label>
+            <input type="text" name="name" required>
 
-<section class="section" id="contact">
-    <h2>Contact Us</h2>
-    <p><strong>Phone:</strong> +27 78 151 7631</p>
-    <p><strong>Email:</strong> mcoresidence@gmail.com</p>
-    <p><strong>Address:</strong> Magwa road, Lusikisiki 4820</p>
-</section>
+            <label for="email">Email</label>
+            <input type="email" name="email" required>
 
-<footer>
-    <div class="social">
-        <a href="https://www.facebook.com/profile.php?id=61571083425343" target="_blank"><i class="fab fa-facebook"></i></a>
-        <a href="https://www.tiktok.com/@mco0021" target="_blank"><i class="fab fa-tiktok"></i></a>
-        <a href="https://wa.me/qr/4ZPX7LNRALZJG1" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            <label for="cell">Cell Number</label>
+            <input type="text" name="cell" required>
+
+            <label for="booking_type">Booking Type</label>
+            <select name="booking_type" required>
+                <option value="">-- Select --</option>
+                <option value="1_hour">1 Hour - R150</option>
+                <option value="2_hour">2 Hours - R250</option>
+                <option value="night">Per Night - R450/night</option>
+            </select>
+
+            <label for="checkin_date">Check-in Date & Time</label>
+            <input type="datetime-local" name="checkin_date" required>
+
+            <label for="checkout_date">Check-out Date (if night booking)</label>
+            <input type="date" name="checkout_date">
+
+            <label for="pickup">Do you need pickup?</label>
+            <select name="pickup" required>
+                <option value="no">No</option>
+                <option value="yes_sasol">Yes - Sasol Garage</option>
+                <option value="yes_engen">Yes - Engen Garage</option>
+            </select>
+
+            <label for="special_note">Special Notes</label>
+            <textarea name="special_note" rows="3"></textarea>
+
+            <button type="submit">Proceed to Payment</button>
+        </form>
     </div>
-    <p>&copy; 2025 MCO Residence. All rights reserved.</p>
-</footer>
 
-<script>
-    let currentIndex = 0;
-    const images = document.querySelectorAll('.gallery img');
-    const prevButton = document.querySelector('.prev');
-    const nextButton = document.querySelector('.next');
+    <script>
+        let current = 0;
+        const images = document.querySelectorAll('.gallery img');
 
-    function showImage(index) {
-        if (index >= images.length) {
-            currentIndex = 0;
-        } else if (index < 0) {
-            currentIndex = images.length - 1;
+        function showNext() {
+            images[current].classList.remove('active');
+            current = (current + 1) % images.length;
+            images[current].classList.add('active');
         }
-        images.forEach((img, i) => {
-            img.style.display = i === currentIndex ? 'block' : 'none';
-        });
-    }
 
-    prevButton.addEventListener('click', () => {
-        currentIndex--;
-        showImage(currentIndex);
-    });
-
-    nextButton.addEventListener('click', () => {
-        currentIndex++;
-        showImage(currentIndex);
-    });
-
-    // Auto-slide every 3 seconds
-    setInterval(() => {
-        currentIndex++;
-        showImage(currentIndex);
-    }, 3000);
-
-    // Show the first image
-    showImage(currentIndex);
-</script>
-
+        setInterval(showNext, 5000); // 5 seconds
+    </script>
 </body>
 </html>
