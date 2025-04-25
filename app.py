@@ -27,12 +27,13 @@ WHATSAPP_LINK = "https://wa.me/qr/4ZPX7LNRALZJG1"
 
 @app.route("/")
 def home():
-    return render_template("index.html")  # Change this to the homepage template
+    return render_template("index.html")
 
 @app.route("/booking", methods=["POST", "GET"])
 def booking():
     if request.method == "POST":
         try:
+            # Get form data
             name = request.form["name"]
             email = request.form["email"]
             booking_type = request.form["booking_type"]
@@ -46,16 +47,15 @@ def booking():
 
             checkin_datetime = datetime.strptime(f"{checkin_date} {checkin_time}", "%Y-%m-%dT%H:%M")
 
+            # Determine booking type and rate
             if booking_type == "1_hour":
                 duration = 1
                 rate = 150
                 checkout_datetime = checkin_datetime + timedelta(hours=1)
-
             elif booking_type == "2_hour":
                 duration = 2
                 rate = 250
                 checkout_datetime = checkin_datetime + timedelta(hours=2)
-
             elif booking_type == "night":
                 checkout_date = request.form["checkout_date"]
                 checkout_datetime = datetime.strptime(f"{checkout_date} 11:00", "%Y-%m-%d %H:%M")
@@ -71,6 +71,7 @@ def booking():
             if early_checkin == "yes":
                 total_cost += 100
 
+            # File upload for manual payment method
             filename = "N/A"
             if payment_method == "manual":
                 file = request.files.get("payment_proof")
@@ -78,6 +79,7 @@ def booking():
                     filename = secure_filename(file.filename)
                     file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
 
+            # Generate reference number
             ref_number = f"REF-{datetime.now().strftime('%Y%m%d%H%M%S')}"
 
             # Save to CSV
@@ -86,7 +88,7 @@ def booking():
                 writer.writerow([datetime.now(), name, email, booking_type, checkin_datetime,
                                  checkout_datetime, payment_method, total_cost, filename, ref_number])
 
-            # Email
+            # Send confirmation email
             msg = Message("MCO Booking Confirmation", recipients=[email])
             msg.body = f"""
             Hi {name},
@@ -112,6 +114,7 @@ def booking():
             """
             mail.send(msg)
 
+            # Redirect to booking summary page with calculated details
             return render_template("summary.html",
                 name=name,
                 ref_number=ref_number,
@@ -128,7 +131,7 @@ def booking():
             print("Booking error:", e)
             return "Something went wrong. Please check your input or try again later.", 400
 
-    return render_template("booking.html")  # Renders the booking page when GET request is made
+    return render_template("booking.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
