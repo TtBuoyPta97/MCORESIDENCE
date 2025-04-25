@@ -12,7 +12,7 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'mcoresidence@gmail.com'
-app.config['MAIL_PASSWORD'] = 'lftiiuewhdhfurvs'  # Replace with your actual app password
+app.config['MAIL_PASSWORD'] = 'lftiiuewhdhfurvs'
 app.config['MAIL_DEFAULT_SENDER'] = 'mcoresidence@gmail.com'
 
 mail = Mail(app)
@@ -29,15 +29,15 @@ WHATSAPP_LINK = "https://wa.me/qr/4ZPX7LNRALZJG1"
 # ✅ Homepage
 @app.route("/")
 def homepage():
-    return render_template("index.html")  # Your homepage
+    return render_template("index.html")
 
 # ✅ Booking form
 @app.route("/booking", methods=["GET", "POST"])
 def booking():
     if request.method == "POST":
-        # Get form data
         name = request.form["name"]
         email = request.form["email"]
+        booking_type = request.form["booking_type"]
         checkin_date = request.form["checkin_date"]
         checkout_date = request.form["checkout_date"]
         checkin_time = request.form["checkin_time"]
@@ -48,27 +48,46 @@ def booking():
         early_checkin = request.form["early_checkin"]
         special_note = request.form.get("special_note")
         ref_number = f"REF-{datetime.now().strftime('%Y%m%d%H%M%S')}"
-        
-        # Combine date and time to get the full datetime
+
         checkin_datetime = datetime.strptime(f"{checkin_date} {checkin_time}", "%Y-%m-%d %H:%M")
         checkout_datetime = datetime.strptime(f"{checkout_date} {checkout_time}", "%Y-%m-%d %H:%M")
 
-        # Calculate the duration of the stay in hours
-        duration = (checkout_datetime - checkin_datetime).total_seconds() / 3600  # Duration in hours
+        total_amount = 0
+        rate = 0
 
-        if duration <= 2:
-            rate = 250  # For 2 hours
-        elif duration <= 24:
-            rate = 450  # For a full day or night (up to 24 hours)
-        else:
-            rate = 150  # For extra hours after 24 hours
+        if booking_type == "night":
+            nights = (checkout_datetime.date() - checkin_datetime.date()).days
+            if checkout_datetime.time() > datetime.strptime("11:00", "%H:%M").time():
+                # Charge extra for overstaying
+                overtime = (checkout_datetime - datetime.combine(checkout_datetime.date(), datetime.strptime("11:00", "%H:%M").time())).total_seconds() / 3600
+                if overtime <= 1:
+                    extra_charge = 150
+                elif overtime <= 2:
+                    extra_charge = 250
+                else:
+                    extra_charge = 0
+                total_amount = (nights * 450) + extra_charge
+            else:
+                total_amount = nights * 450
+            rate = 450
 
-        total_amount = rate * duration
+        elif booking_type == "hour":
+            duration_hours = (checkout_datetime - checkin_datetime).total_seconds() / 3600
+            if duration_hours <= 1:
+                total_amount = 150
+                rate = 150
+            elif duration_hours <= 2:
+                total_amount = 250
+                rate = 250
+            else:
+                rate = 150
+                total_amount = duration_hours * 150
 
         if early_checkin == "yes":
-            total_amount += 100  # Add charge for early check-in (if applicable)
+            total_amount += 100
 
-        # Handle payment method and file upload
+        # File upload for manual payment
+        filename = "N/A"
         if payment_method == "manual":
             file = request.files.get("payment_proof")
             if file:
@@ -76,72 +95,70 @@ def booking():
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(file_path)
 
-                # Save to CSV
-                with open("bookings.csv", "a", newline="") as f:
-                    writer = csv.writer(f)
-                    writer.writerow([datetime.now(), name, email, checkin_datetime, checkout_datetime, filename, payment_method, rate, total_amount])
+        # Save to CSV
+        with open("bookings.csv", "a", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow([datetime.now(), name, email, checkin_datetime, checkout_datetime, booking_type, filename, payment_method, rate, total_amount])
 
-                # Email to client
-                try:
-                    msg_client = Message("Booking Confirmation", recipients=[email])
-                    msg_client.body = f"""
+        # Send email to client
+        try:
+            msg_client = Message("Booking Confirmation", recipients=[email])
+            msg_client.body = f"""
 Hi {name},
 
 Thank you for your booking from {checkin_datetime} to {checkout_datetime}.
 Your reference number is: {ref_number}
 
-We received your proof of payment.
-
 Total: R{total_amount}
 
-Banking details for your manual payment:
+Booking type: {booking_type}
+
+Banking details for manual payment:
 Amangcikwa Holdings PTY Ltd.
 Account Number: 10233031039
 Bank: Standard Bank
 
 If you need help, feel free to contact us via WhatsApp: {WHATSAPP_LINK}
 
-Kind regards,  
+Kind regards,
 MCO Residence
-                    """
-                    mail.send(msg_client)
-                except Exception as e:
-                    print("Error sending email to client:", e)
+"""
+            mail.send(msg_client)
+        except Exception as e:
+            print("Error sending email to client:", e)
 
-                # Email to admin
-                try:
-                    admin_email = 'mcoresidence@gmail.com'
-                    msg_admin = Message("New Manual Booking Received", recipients=[admin_email])
-                    msg_admin.body = f"""
+        # Admin notification
+        try:
+            admin_email = 'mcoresidence@gmail.com'
+            msg_admin = Message("New Booking Received", recipients=[admin_email])
+            msg_admin.body = f"""
 New Booking Details:
 
 Name: {name}
 Email: {email}
-Check-in Date and Time: {checkin_datetime}
-Check-out Date and Time: {checkout_datetime}
+Booking type: {booking_type}
+Check-in: {checkin_datetime}
+Check-out: {checkout_datetime}
+Pickup: {pickup}
+Pickup Location: {pickup_location}
+Early Check-in: {early_checkin}
+Special Notes: {special_note}
 Reference Number: {ref_number}
-Payment Method: Manual
+Payment Method: {payment_method}
 Total Amount: R{total_amount}
+"""
+            if payment_method == "manual" and filename != "N/A":
+                with open(file_path, "rb") as fp:
+                    msg_admin.attach(filename, file.content_type, fp.read())
+            mail.send(msg_admin)
+        except Exception as e:
+            print("Error sending email to admin:", e)
 
-Proof of payment attached.
-                    """
-                    with open(file_path, "rb") as fp:
-                        msg_admin.attach(filename, file.content_type, fp.read())
-                    mail.send(msg_admin)
-                except Exception as e:
-                    print("Error sending email to admin:", e)
-
-            return render_template("success.html")
-
-        elif payment_method == "online":
-            # Save basic info to CSV
-            with open("bookings.csv", "a", newline="") as f:
-                writer = csv.writer(f)
-                writer.writerow([datetime.now(), name, email, checkin_datetime, checkout_datetime, "N/A", payment_method, rate, total_amount])
-
-            # Redirect to payment gateway (replace with actual payment gateway URL)
+        if payment_method == "online":
             payfast_url = f"https://www.payfast.co.za/eng/process?merchant_id=14070761&merchant_key=t9gho8csdpkwd&amount={total_amount}&item_name=MCO_Booking&email_address={email}&return_url=http://localhost:5000/success"
             return redirect(payfast_url)
+
+        return render_template("success.html")
 
     return render_template("booking.html")
 
