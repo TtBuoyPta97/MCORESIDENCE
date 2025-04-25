@@ -121,6 +121,12 @@
         showImage(currentIndex);
     });
 
+    // Auto-slide every 3 seconds
+    setInterval(() => {
+        currentIndex++;
+        showImage(currentIndex);
+    }, 3000);
+
     // Show the first image
     showImage(currentIndex);
 </script>
