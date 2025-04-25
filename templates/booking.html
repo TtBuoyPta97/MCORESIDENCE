@@ -1,113 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>MCO Booking</title>
-    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Booking - MCO Residence</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    form {
+      max-width: 600px;
+      margin: auto;
+    }
+    label {
+      font-weight: bold;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .button {
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      display: inline-block;
+      margin-top: 10px;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>MCO Residence Booking</h1>
-    </header>
 
-    <main>
-        <form action="/booking" method="POST" enctype="multipart/form-data">
-            <label>Full Name:
-                <input type="text" name="name" required>
-            </label>
+  <h1>Booking Form</h1>
+  <form action="/booking" method="POST" enctype="multipart/form-data">
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" required>
 
-            <label>Email:
-                <input type="email" name="email" required>
-            </label>
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" required>
 
-            <label>Booking Type:
-                <select name="booking_type" id="booking_type" required onchange="toggleCheckout()">
-                    <option value="1_hour">1 Hour (R150)</option>
-                    <option value="2_hour">2 Hours (R250)</option>
-                    <option value="night">Night Stay (R450 per night)</option>
-                </select>
-            </label>
+    <label for="cell">Cell Number</label>
+    <input type="text" id="cell" name="cell" required>
 
-            <label>Check-in Date and Time:
-                <input type="datetime-local" name="checkin_date" id="checkin_date" required>
-            </label>
+    <label for="booking_type">Booking Type</label>
+    <select id="booking_type" name="booking_type" required>
+      <option value="">Select Booking Type</option>
+      <option value="night">Night</option>
+      <option value="1_hour">1 Hour</option>
+      <option value="2_hour">2 Hours</option>
+    </select>
 
-            <div id="checkout_section" style="display:none;">
-                <label>Check-out Date (for night stay):
-                    <input type="date" name="checkout_date" id="checkout_date">
-                </label>
-            </div>
+    <div id="checkout_date" class="hidden">
+      <label for="checkout_date">Check-out Date</label>
+      <input type="date" id="checkout_date_input" name="checkout_date">
+    </div>
 
-            <label>Pickup Required?
-                <select name="pickup">
-                    <option value="no">No</option>
-                    <option value="yes">Yes</option>
-                </select>
-            </label>
+    <label for="payment_method">Payment Method</label>
+    <select id="payment_method" name="payment_method" required>
+      <option value="">Select Payment Method</option>
+      <option value="online">Online Payment</option>
+      <option value="manual">Manual Payment</option>
+    </select>
 
-            <div id="pickup_location_section" style="display:none;">
-                <label>Pickup Location:
-                    <select name="pickup_location">
-                        <option value="engine_garage_lusikisiki">Engine Garage Lusikisiki</option>
-                        <option value="sasol_garage_lusikisiki">Sasol Garage Lusikisiki</option>
-                    </select>
-                </label>
-            </div>
+    <div id="price_display"></div>
 
-            <label>Payment Method:
-                <select name="payment_method" id="payment_method" onchange="toggleProofUpload()">
-                    <option value="manual">Manual (Upload proof)</option>
-                    <option value="online">Online Payment</option>
-                </select>
-            </label>
+    <label for="pickup">Require Pickup?</label>
+    <select id="pickup" name="pickup">
+      <option value="no">No</option>
+      <option value="yes">Yes</option>
+    </select>
 
-            <div id="proof_section">
-                <label>Upload Payment Proof (manual only):
-                    <input type="file" name="payment_proof" accept="image/*,application/pdf">
-                </label>
-            </div>
+    <div id="pickup_location" class="hidden">
+      <label for="pickup_location">Pickup Location</label>
+      <select id="pickup_location_select" name="pickup_location">
+        <option value="sasol">Sasol Garage Lusikisiki</option>
+        <option value="engen">Engen Garage Lusikisiki</option>
+      </select>
+    </div>
 
-            <label>Early Check-in?
-                <select name="early_checkin">
-                    <option value="no">No</option>
-                    <option value="yes">Yes (+R100)</option>
-                </select>
-            </label>
+    <label for="special_note">Special Notes</label>
+    <textarea id="special_note" name="special_note" rows="4"></textarea>
 
-            <label>Special Notes:
-                <textarea name="special_note"></textarea>
-            </label>
+    <button type="submit" class="button">Proceed</button>
+  </form>
 
-            <p><strong>Note:</strong> No pets allowed.</p>
+  <script>
+    const bookingType = document.getElementById("booking_type");
+    const checkoutDate = document.getElementById("checkout_date");
+    const paymentMethod = document.getElementById("payment_method");
+    const priceDisplay = document.getElementById("price_display");
+    const pickup = document.getElementById("pickup");
+    const pickupLocation = document.getElementById("pickup_location");
 
-            <button type="submit">Submit Booking</button>
-        </form>
-    </main>
+    bookingType.addEventListener("change", function() {
+      const type = bookingType.value;
 
-    <script>
-        function toggleCheckout() {
-            const type = document.getElementById("booking_type").value;
-            const checkout = document.getElementById("checkout_section");
-            checkout.style.display = type === "night" ? "block" : "none";
-        }
+      if (type === "night") {
+        checkoutDate.classList.remove("hidden");
+        priceDisplay.textContent = "Price: R450 per night";
+      } else {
+        checkoutDate.classList.add("hidden");
+        priceDisplay.textContent = `Price: R${type === "1_hour" ? "150" : "250"} for ${type.replace('_', ' ')}`;
+      }
+    });
 
-        function toggleProofUpload() {
-            const payment = document.getElementById("payment_method").value;
-            const proof = document.getElementById("proof_section");
-            proof.style.display = payment === "manual" ? "block" : "none";
-        }
+    pickup.addEventListener("change", function() {
+      if (pickup.value === "yes") {
+        pickupLocation.classList.remove("hidden");
+      } else {
+        pickupLocation.classList.add("hidden");
+      }
+    });
+  </script>
 
-        function togglePickupLocation() {
-            const pickup = document.querySelector('select[name="pickup"]').value;
-            const pickupLocationSection = document.getElementById("pickup_location_section");
-            pickupLocationSection.style.display = pickup === "yes" ? "block" : "none";
-        }
-
-        window.onload = () => {
-            toggleCheckout();
-            toggleProofUpload();
-            togglePickupLocation();
-        };
-    </script>
 </body>
 </html>
