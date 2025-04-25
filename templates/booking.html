@@ -19,7 +19,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        h1, h3 {
+        h1 {
             text-align: center;
             color: #333;
         }
@@ -29,7 +29,7 @@
             margin-bottom: 5px;
             display: block;
         }
-        input, select, textarea, button {
+        input, select, button {
             width: 100%;
             padding: 10px;
             margin: 10px 0 20px 0;
@@ -47,33 +47,39 @@
         button:hover {
             background-color: #45a049;
         }
-        .bank-details, .upload-section,
-        #pickup_location_section, #other_special_section {
+        .bank-details {
             display: none;
-        }
-        .pricing-box {
-            background-color: #e3f2fd;
-            padding: 10px;
-            border: 1px solid #90caf9;
+            margin-top: 20px;
+            background-color: #e9f7ef;
+            padding: 15px;
             border-radius: 5px;
-            margin-bottom: 20px;
+            border: 1px solid #d3f7d3;
+        }
+        .bank-details h3 {
+            margin-top: 0;
+        }
+        .bank-details p {
+            font-size: 16px;
+            color: #333;
+        }
+        .upload-section {
+            display: none;
         }
     </style>
     <script>
         function showBankDetails() {
-            const method = document.getElementById("payment_method").value;
-            document.getElementById("bank_details").style.display = method === "manual" ? "block" : "none";
-            document.getElementById("upload_section").style.display = method === "manual" ? "block" : "none";
-        }
+            const paymentMethod = document.getElementById("payment_method").value;
+            const bankDetails = document.getElementById("bank_details");
+            const uploadSection = document.getElementById("upload_section");
 
-        function togglePickupDetails() {
-            const pickup = document.getElementById("pickup").value;
-            document.getElementById("pickup_location_section").style.display = pickup === "yes" ? "block" : "none";
-        }
-
-        function toggleOtherSpecial() {
-            const special = document.getElementById("special").value;
-            document.getElementById("other_special_section").style.display = special === "other" ? "block" : "none";
+            // Show bank details and file upload only for manual payment
+            if (paymentMethod === "manual") {
+                bankDetails.style.display = "block";
+                uploadSection.style.display = "block";
+            } else {
+                bankDetails.style.display = "none";
+                uploadSection.style.display = "none";
+            }
         }
     </script>
 </head>
@@ -81,82 +87,9 @@
 
 <div class="container">
     <h1>Booking Form</h1>
-
-    <div class="pricing-box">
-        <h3>Rates:</h3>
-        <p><strong>R450</strong> – Full Day / Night</p>
-        <p><strong>R250</strong> – 2 Hours</p>
-        <p><strong>R150/hour</strong> – Extra Hour</p>
-    </div>
-
     <form method="POST" action="/booking" enctype="multipart/form-data">
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" required>
 
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-
-        <label for="date">Booking Date:</label>
-        <input type="date" id="date" name="date" required>
-
-        <label for="time">Booking Time:</label>
-        <input type="time" id="time" name="time" required>
-
-        <label for="payment_method">Payment Method:</label>
-        <select id="payment_method" name="payment_method" onchange="showBankDetails()" required>
-            <option value="online">Online Payment</option>
-            <option value="manual">Manual Payment</option>
-        </select>
-
-        <div id="bank_details" class="bank-details">
-            <h3>Banking Details for Manual Payment:</h3>
-            <p><strong>Amangcikwa Holdings PTY Ltd.</strong></p>
-            <p><strong>Account Number:</strong> 10233031039</p>
-            <p><strong>Bank:</strong> Standard Bank</p>
-        </div>
-
-        <div id="upload_section" class="upload-section">
-            <label for="payment_proof">Proof of Payment (for manual payment):</label>
-            <input type="file" name="payment_proof" accept=".pdf, .png, .jpg, .jpeg">
-        </div>
-
-        <!-- Pickup -->
-        <label for="pickup">Do you need a pick-up?</label>
-        <select id="pickup" name="pickup" onchange="togglePickupDetails()">
-            <option value="">No</option>
-            <option value="yes">Yes</option>
-        </select>
-
-        <div id="pickup_location_section">
-            <label for="pickup_location">Pick-up Location:</label>
-            <select id="pickup_location" name="pickup_location">
-                <option value="sasol">Sasol Garage</option>
-                <option value="engen">Engen Garage</option>
-            </select>
-        </div>
-
-        <!-- Early Check-in -->
-        <label for="early_checkin">Do you want to check in early?</label>
-        <select id="early_checkin" name="early_checkin">
-            <option value="no">No</option>
-            <option value="yes">Yes</option>
-        </select>
-
-        <!-- Other Special Considerations -->
-        <label for="special">Any other special considerations?</label>
-        <select id="special" name="special" onchange="toggleOtherSpecial()">
-            <option value="">No</option>
-            <option value="other">Other</option>
-        </select>
-
-        <div id="other_special_section">
-            <label for="special_note">Please specify:</label>
-            <textarea id="special_note" name="special_note" rows="4" placeholder="Your note..."></textarea>
-        </div>
-
-        <button type="submit">Submit Booking</button>
-    </form>
-</div>
-
-</body>
-</html>
+        <input
