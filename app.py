@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_mail import Mail, Message
 import csv
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 from werkzeug.utils import secure_filename
 
@@ -12,7 +12,7 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'mcoresidence@gmail.com'
-app.config['MAIL_PASSWORD'] = 'lftiiuewhdhfurvs'  # Replace this with your actual app password
+app.config['MAIL_PASSWORD'] = 'lftiiuewhdhfurvs'  # Replace with your actual app password
 app.config['MAIL_DEFAULT_SENDER'] = 'mcoresidence@gmail.com'
 
 mail = Mail(app)
@@ -38,8 +38,10 @@ def booking():
         # Get form data
         name = request.form["name"]
         email = request.form["email"]
-        date = request.form["date"]
-        time = request.form["time"]
+        checkin_date = request.form["checkin_date"]
+        checkout_date = request.form["checkout_date"]
+        checkin_time = request.form["checkin_time"]
+        checkout_time = request.form["checkout_time"]
         payment_method = request.form["payment_method"]
         pickup = request.form["pickup"]
         pickup_location = request.form.get("pickup_location")
@@ -47,21 +49,21 @@ def booking():
         special_note = request.form.get("special_note")
         ref_number = f"REF-{datetime.now().strftime('%Y%m%d%H%M%S')}"
         
-        # Calculate the rate
-        booking_duration = 0  # Default in case of invalid input
-        rate = 0
-        
-        if request.form.get("duration") == "full_day":
-            booking_duration = 1  # Full day or night
-            rate = 450
-        elif request.form.get("duration") == "2_hours":
-            booking_duration = 2  # 2 hours
-            rate = 250
-        elif request.form.get("duration") == "extra_hour":
-            booking_duration = 1  # Extra hour
-            rate = 150
+        # Combine date and time to get the full datetime
+        checkin_datetime = datetime.strptime(f"{checkin_date} {checkin_time}", "%Y-%m-%d %H:%M")
+        checkout_datetime = datetime.strptime(f"{checkout_date} {checkout_time}", "%Y-%m-%d %H:%M")
 
-        total_amount = rate  # Default total for now
+        # Calculate the duration of the stay in hours
+        duration = (checkout_datetime - checkin_datetime).total_seconds() / 3600  # Duration in hours
+
+        if duration <= 2:
+            rate = 250  # For 2 hours
+        elif duration <= 24:
+            rate = 450  # For a full day or night (up to 24 hours)
+        else:
+            rate = 150  # For extra hours after 24 hours
+
+        total_amount = rate * duration
 
         if early_checkin == "yes":
             total_amount += 100  # Add charge for early check-in (if applicable)
@@ -77,7 +79,7 @@ def booking():
                 # Save to CSV
                 with open("bookings.csv", "a", newline="") as f:
                     writer = csv.writer(f)
-                    writer.writerow([datetime.now(), name, email, date, time, filename, payment_method, rate, total_amount])
+                    writer.writerow([datetime.now(), name, email, checkin_datetime, checkout_datetime, filename, payment_method, rate, total_amount])
 
                 # Email to client
                 try:
@@ -85,7 +87,7 @@ def booking():
                     msg_client.body = f"""
 Hi {name},
 
-Thank you for your booking on {date} at {time}.
+Thank you for your booking from {checkin_datetime} to {checkout_datetime}.
 Your reference number is: {ref_number}
 
 We received your proof of payment.
@@ -115,8 +117,8 @@ New Booking Details:
 
 Name: {name}
 Email: {email}
-Date: {date}
-Time: {time}
+Check-in Date and Time: {checkin_datetime}
+Check-out Date and Time: {checkout_datetime}
 Reference Number: {ref_number}
 Payment Method: Manual
 Total Amount: R{total_amount}
@@ -135,7 +137,7 @@ Proof of payment attached.
             # Save basic info to CSV
             with open("bookings.csv", "a", newline="") as f:
                 writer = csv.writer(f)
-                writer.writerow([datetime.now(), name, email, date, time, "N/A", payment_method, rate, total_amount])
+                writer.writerow([datetime.now(), name, email, checkin_datetime, checkout_datetime, "N/A", payment_method, rate, total_amount])
 
             # Redirect to payment gateway (replace with actual payment gateway URL)
             payfast_url = f"https://www.payfast.co.za/eng/process?merchant_id=14070761&merchant_key=t9gho8csdpkwd&amount={total_amount}&item_name=MCO_Booking&email_address={email}&return_url=http://localhost:5000/success"
