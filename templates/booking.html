@@ -65,6 +65,12 @@
         .upload-section {
             display: none;
         }
+        .no-pets {
+            font-size: 16px;
+            color: #e74c3c;
+            font-weight: bold;
+            margin-top: 20px;
+        }
     </style>
     <script>
         function showBankDetails() {
@@ -135,6 +141,11 @@
 
         <label for="special_note">Other Special Considerations (if any):</label>
         <textarea id="special_note" name="special_note" rows="4" placeholder="Enter any special requests or considerations here."></textarea>
+
+        <!-- No pets allowed notice -->
+        <div class="no-pets">
+            <p><strong>No pets allowed.</strong></p>
+        </div>
 
         <!-- Show banking details if manual payment is selected -->
         <div id="bank_details" class="bank-details">
