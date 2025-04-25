@@ -92,4 +92,80 @@
         <input type="text" id="name" name="name" required>
 
         <label for="email">Email:</label>
-        <input
+        <input type="email" id="email" name="email" required>
+
+        <label for="checkin_date">Check-in Date:</label>
+        <input type="date" id="checkin_date" name="checkin_date" required>
+
+        <label for="checkin_time">Check-in Time:</label>
+        <input type="time" id="checkin_time" name="checkin_time" required>
+
+        <label for="checkout_date">Check-out Date:</label>
+        <input type="date" id="checkout_date" name="checkout_date" required>
+
+        <label for="checkout_time">Check-out Time:</label>
+        <input type="time" id="checkout_time" name="checkout_time" required>
+
+        <label for="payment_method">Payment Method:</label>
+        <select id="payment_method" name="payment_method" onchange="showBankDetails()" required>
+            <option value="online">Online Payment</option>
+            <option value="manual">Manual Payment</option>
+        </select>
+
+        <!-- Special considerations -->
+        <label for="pickup">Pick-up Option:</label>
+        <select id="pickup" name="pickup">
+            <option value="no">No Pick-up</option>
+            <option value="yes">Yes, I need a pick-up</option>
+        </select>
+
+        <div id="pickup_location_section" style="display:none;">
+            <label for="pickup_location">Pick-up Location:</label>
+            <select id="pickup_location" name="pickup_location">
+                <option value="sasol">Sasol Garage</option>
+                <option value="engine">Engine Garage</option>
+            </select>
+        </div>
+
+        <label for="early_checkin">Early Check-in:</label>
+        <select id="early_checkin" name="early_checkin">
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+        </select>
+
+        <label for="special_note">Other Special Considerations (if any):</label>
+        <textarea id="special_note" name="special_note" rows="4" placeholder="Enter any special requests or considerations here."></textarea>
+
+        <!-- Show banking details if manual payment is selected -->
+        <div id="bank_details" class="bank-details">
+            <h3>Banking Details for Manual Payment:</h3>
+            <p><strong>Amangcikwa Holdings PTY Ltd.</strong></p>
+            <p><strong>Account Number:</strong> 10233031039</p>
+            <p><strong>Bank:</strong> Standard Bank</p>
+        </div>
+
+        <!-- File Upload Section for Manual Payment -->
+        <div id="upload_section" class="upload-section">
+            <label for="payment_proof">Proof of Payment (for manual payment):</label>
+            <input type="file" name="payment_proof" accept=".pdf, .png, .jpg, .jpeg">
+        </div>
+
+        <button type="submit">Submit Booking</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById("pickup").addEventListener("change", function() {
+        var pickup = document.getElementById("pickup").value;
+        var pickupLocationSection = document.getElementById("pickup_location_section");
+
+        if (pickup === "yes") {
+            pickupLocationSection.style.display = "block";
+        } else {
+            pickupLocationSection.style.display = "none";
+        }
+    });
+</script>
+
+</body>
+</html>
