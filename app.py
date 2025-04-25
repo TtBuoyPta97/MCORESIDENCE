@@ -16,14 +16,16 @@ app.config['MAIL_PASSWORD'] = 'lftiiuewhdhfurvs'
 app.config['MAIL_DEFAULT_SENDER'] = 'mcoresidence@gmail.com'
 mail = Mail(app)
 
-# Upload setup
-UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static/uploads')
+# Upload folder setup
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static', 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
 
-# WhatsApp link
 WHATSAPP_LINK = "https://wa.me/qr/4ZPX7LNRALZJG1"
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route("/")
 def home():
@@ -33,24 +35,19 @@ def home():
 def booking():
     if request.method == "POST":
         try:
-            # Get form data
-            name = request.form.get("name")
-            email = request.form.get("email")
-            booking_type = request.form.get("booking_type")
-            checkin_date = request.form.get("checkin_date")
-            checkin_time = request.form.get("checkin_time")
-            payment_method = request.form.get("payment_method")
-            pickup = request.form.get("pickup")
+            name = request.form["name"]
+            email = request.form["email"]
+            cell = request.form["cell"]
+            booking_type = request.form["booking_type"]
+            checkin_date = request.form["checkin_date"]
+            checkin_time = request.form["checkin_time"]
+            payment_method = request.form["payment_method"]
+            pickup = request.form["pickup"]
             pickup_location = request.form.get("pickup_location", "")
-            early_checkin = request.form.get("early_checkin", "no")
             special_note = request.form.get("special_note", "")
 
-            if not all([name, email, booking_type, checkin_date, checkin_time, payment_method, pickup]):
-                return "Missing required form fields. Please check your input.", 400
+            checkin_datetime = datetime.strptime(f"{checkin_date}T{checkin_time}", "%Y-%m-%dT%H:%M")
 
-            checkin_datetime = datetime.strptime(f"{checkin_date} {checkin_time}", "%Y-%m-%dT%H:%M")
-
-            # Determine booking type and rate
             if booking_type == "1_hour":
                 duration = 1
                 rate = 150
@@ -60,66 +57,88 @@ def booking():
                 rate = 250
                 checkout_datetime = checkin_datetime + timedelta(hours=2)
             elif booking_type == "night":
-                checkout_date = request.form.get("checkout_date")
-                if not checkout_date:
-                    return "Checkout date is required for night bookings.", 400
+                checkout_date = request.form["checkout_date"]
                 checkout_datetime = datetime.strptime(f"{checkout_date} 11:00", "%Y-%m-%d %H:%M")
                 nights = (checkout_datetime.date() - checkin_datetime.date()).days
                 nights = max(1, nights)
-                rate = 450
                 duration = nights
+                rate = 450
             else:
                 return "Invalid booking type", 400
 
             total_cost = rate * duration
 
-            if early_checkin == "yes":
-                total_cost += 100
-
-            # File upload for manual payment method
             filename = "N/A"
+            filepath = None
             if payment_method == "manual":
                 file = request.files.get("payment_proof")
-                if file and file.filename:
+                if file and allowed_file(file.filename):
                     filename = secure_filename(file.filename)
-                    file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+                    filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+                    file.save(filepath)
 
-            # Generate reference number
             ref_number = f"REF-{datetime.now().strftime('%Y%m%d%H%M%S')}"
 
             # Save to CSV
             with open("bookings.csv", "a", newline="") as f:
                 writer = csv.writer(f)
-                writer.writerow([datetime.now(), name, email, booking_type, checkin_datetime,
-                                 checkout_datetime, payment_method, total_cost, filename, ref_number])
+                writer.writerow([
+                    datetime.now(), name, email, cell, booking_type,
+                    checkin_datetime, checkout_datetime, payment_method,
+                    total_cost, filename, pickup, pickup_location, special_note, ref_number
+                ])
 
-            # Send confirmation email
-            msg = Message("MCO Booking Confirmation", recipients=[email])
-            msg.body = f"""
-            Hi {name},
+            # Email to client
+            msg_client = Message("MCO Booking Confirmation", recipients=[email])
+            msg_client.body = f"""
+Hi {name},
 
-            Thank you for your booking. Here are your details:
+Thank you for your booking. Here are your details:
 
-            Reference: {ref_number}
-            Check-in: {checkin_datetime.strftime('%Y-%m-%d %H:%M')}
-            Check-out: {checkout_datetime.strftime('%Y-%m-%d %H:%M')}
-            Total: R{total_cost}
+Reference: {ref_number}
+Check-in: {checkin_datetime.strftime('%Y-%m-%d %H:%M')}
+Check-out: {checkout_datetime.strftime('%Y-%m-%d %H:%M')}
+Total: R{total_cost}
+Pickup: {pickup} - {pickup_location}
+Special Note: {special_note}
 
-            Payment Method: {payment_method.title()}
+Payment Method: {payment_method.title()}
 
-            Banking details (for manual payment):
-            Amangcikwa Holdings PTY Ltd.
-            Account Number: 10233031039
-            Bank: Standard Bank
+For Manual Payment:
+Bank: Standard Bank
+Name: Amangcikwa Holdings PTY Ltd
+Acc No: 10233031039
 
-            Contact us on WhatsApp: {WHATSAPP_LINK}
+Contact us on WhatsApp: {WHATSAPP_LINK}
 
-            Regards,
-            MCO Residence
+Regards,
+MCO Residence
             """
-            mail.send(msg)
+            mail.send(msg_client)
 
-            # Redirect to booking summary page with calculated details
+            # Email to you (admin)
+            msg_admin = Message(f"New Booking Received - {ref_number}", recipients=["mcoresidence@gmail.com"])
+            msg_admin.body = f"""
+NEW BOOKING RECEIVED
+
+Name: {name}
+Email: {email}
+Cell: {cell}
+Reference: {ref_number}
+Booking Type: {booking_type}
+Check-in: {checkin_datetime.strftime('%Y-%m-%d %H:%M')}
+Check-out: {checkout_datetime.strftime('%Y-%m-%d %H:%M')}
+Total Cost: R{total_cost}
+Payment Method: {payment_method}
+Pickup: {pickup} - {pickup_location}
+Special Note: {special_note}
+            """
+            if filepath:
+                with app.open_resource(filepath) as fp:
+                    msg_admin.attach(filename, "application/octet-stream", fp.read())
+
+            mail.send(msg_admin)
+
             return render_template("summary.html",
                 name=name,
                 ref_number=ref_number,
@@ -131,12 +150,12 @@ def booking():
                 show_payment_link=(payment_method == "online"),
                 payfast_url=f"https://www.payfast.co.za/eng/process?merchant_id=14070761&merchant_key=t9gho8csdpkwd&amount={total_cost}&item_name=MCO_Booking&email_address={email}"
             )
-
         except Exception as e:
             print("Booking error:", e)
-            return f"Something went wrong: {str(e)}. Please check your input or try again later.", 400
+            return "Something went wrong. Please check your input or try again later.", 400
 
     return render_template("booking.html")
 
-if __name__ == "__main__":
-    app.run(debug=True)
+@app.route("/success")
+def success():
+    return render_template("success.html")
