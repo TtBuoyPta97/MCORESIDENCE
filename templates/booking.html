@@ -1,166 +1,101 @@
-<!-- Updated booking.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking Form</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7f6;
-            padding: 20px;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        h1 {
-            text-align: center;
-        }
-        label {
-            font-weight: bold;
-        }
-        input, select, textarea, button {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0 20px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .hidden {
-            display: none;
-        }
-        .bank-details {
-            background: #e9f7ef;
-            border: 1px solid #d3f7d3;
-            padding: 15px;
-            border-radius: 5px;
-        }
-    </style>
-    <script>
-        function toggleMode() {
-            const mode = document.getElementById("mode").value;
-            document.getElementById("night_section").style.display = mode === "night" ? "block" : "none";
-            document.getElementById("hour_section").style.display = mode === "hour" ? "block" : "none";
-        }
-
-        function showBankDetails() {
-            const method = document.getElementById("payment_method").value;
-            document.getElementById("bank_section").style.display = method === "manual" ? "block" : "none";
-        }
-
-        function togglePickup() {
-            const pickup = document.getElementById("pickup").value;
-            document.getElementById("pickup_location_section").style.display = pickup === "yes" ? "block" : "none";
-        }
-
-        function toggleSpecial() {
-            const val = document.getElementById("special").value;
-            document.getElementById("special_text").style.display = val === "other" ? "block" : "none";
-        }
-    </script>
+    <title>MCO Booking</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Booking Form</h1>
+    <header>
+        <h1>MCO Residence Booking</h1>
+    </header>
+
+    <main>
         <form action="/booking" method="POST" enctype="multipart/form-data">
-            <label>Name:</label>
-            <input type="text" name="name" required>
+            <label>Full Name:
+                <input type="text" name="name" required>
+            </label>
 
-            <label>Email:</label>
-            <input type="email" name="email" required>
+            <label>Email:
+                <input type="email" name="email" required>
+            </label>
 
-            <label>No pets allowed</label><br>
-
-            <label>Booking Mode:</label>
-            <select name="mode" id="mode" onchange="toggleMode()" required>
-                <option value="">Select...</option>
-                <option value="night">Night</option>
-                <option value="hour">Hour</option>
-            </select>
-
-            <!-- Night Mode -->
-            <div id="night_section" class="hidden">
-                <label>Check-in Date:</label>
-                <input type="date" name="checkin_date">
-                <label>Check-out Date:</label>
-                <input type="date" name="checkout_date">
-                <label>Check-out Time:</label>
-                <input type="time" name="checkout_time">
-            </div>
-
-            <!-- Hour Mode -->
-            <div id="hour_section" class="hidden">
-                <label>Check-in Date:</label>
-                <input type="date" name="hour_checkin_date">
-                <label>Check-in Time:</label>
-                <input type="time" name="hour_checkin_time">
-                <label>Check-out Time:</label>
-                <input type="time" name="hour_checkout_time">
-            </div>
-
-            <label>Do you want early check-in?</label>
-            <select name="early_checkin">
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-            </select>
-
-            <label>Need pickup?</label>
-            <select name="pickup" id="pickup" onchange="togglePickup()">
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-            </select>
-
-            <div id="pickup_location_section" class="hidden">
-                <label>Pickup Location:</label>
-                <select name="pickup_location">
-                    <option value="Sasol Garage">Sasol Garage</option>
-                    <option value="Engen Garage">Engen Garage</option>
+            <label>Booking Type:
+                <select name="booking_type" id="booking_type" required onchange="toggleCheckout()">
+                    <option value="1_hour">1 Hour (R150)</option>
+                    <option value="2_hour">2 Hours (R250)</option>
+                    <option value="night">Night Stay (R450 per night)</option>
                 </select>
+            </label>
+
+            <label>Check-in Date and Time:
+                <input type="datetime-local" name="checkin_date" id="checkin_date" required>
+            </label>
+
+            <div id="checkout_section" style="display:none;">
+                <label>Check-out Date (for night stay):
+                    <input type="date" name="checkout_date" id="checkout_date">
+                </label>
             </div>
 
-            <label>Special Considerations:</label>
-            <select name="special" id="special" onchange="toggleSpecial()">
-                <option value="none">None</option>
-                <option value="other">Other</option>
-            </select>
+            <label>Payment Method:
+                <select name="payment_method" id="payment_method" onchange="toggleProofUpload()">
+                    <option value="manual">Manual (Upload proof)</option>
+                    <option value="online">Online Payment</option>
+                </select>
+            </label>
 
-            <div id="special_text" class="hidden">
-                <textarea name="special_note" placeholder="Write your special note here..."></textarea>
+            <div id="proof_section">
+                <label>Upload Payment Proof (manual only):
+                    <input type="file" name="payment_proof" accept="image/*,application/pdf">
+                </label>
             </div>
 
-            <label>Payment Method:</label>
-            <select name="payment_method" id="payment_method" onchange="showBankDetails()" required>
-                <option value="online">Online Payment</option>
-                <option value="manual">Manual Payment</option>
-            </select>
+            <label>Pickup Required?
+                <select name="pickup">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </label>
 
-            <div id="bank_section" class="bank-details hidden">
-                <p><strong>Banking Details:</strong></p>
-                <p>Amangcikwa Holdings PTY Ltd.</p>
-                <p>Account Number: 10233031039</p>
-                <p>Bank: Standard Bank</p>
+            <label>Pickup Location (if yes):
+                <input type="text" name="pickup_location">
+            </label>
 
-                <label>Upload Proof of Payment:</label>
-                <input type="file" name="payment_proof">
-            </div>
+            <label>Early Check-in?
+                <select name="early_checkin">
+                    <option value="no">No</option>
+                    <option value="yes">Yes (+R100)</option>
+                </select>
+            </label>
+
+            <label>Special Notes:
+                <textarea name="special_note"></textarea>
+            </label>
+
+            <p><strong>Note:</strong> No pets allowed.</p>
 
             <button type="submit">Submit Booking</button>
         </form>
-    </div>
+    </main>
+
+    <script>
+        function toggleCheckout() {
+            const type = document.getElementById("booking_type").value;
+            const checkout = document.getElementById("checkout_section");
+            checkout.style.display = type === "night" ? "block" : "none";
+        }
+
+        function toggleProofUpload() {
+            const payment = document.getElementById("payment_method").value;
+            const proof = document.getElementById("proof_section");
+            proof.style.display = payment === "manual" ? "block" : "none";
+        }
+
+        window.onload = () => {
+            toggleCheckout();
+            toggleProofUpload();
+        };
+    </script>
 </body>
 </html>
