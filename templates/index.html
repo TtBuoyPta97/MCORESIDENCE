@@ -1,84 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>MCO Residence Booking</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
-        .gallery { width: 100%; max-height: 300px; overflow: hidden; position: relative; }
-        .gallery img { width: 100%; height: auto; display: none; }
-        .gallery img.active { display: block; }
-
-        .form-container { padding: 20px; }
-        label { display: block; margin-top: 10px; }
-        input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; }
-        button { margin-top: 20px; padding: 10px 20px; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MCO Residence</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+    }
+    .gallery {
+      width: 100%;
+      height: 400px;
+      overflow: hidden;
+      position: relative;
+    }
+    .gallery img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      position: absolute;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+    .gallery img.active {
+      opacity: 1;
+    }
+    .content {
+      padding: 20px;
+      text-align: center;
+    }
+    a.button {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+  </style>
 </head>
 <body>
 
-    <!-- SLIDING GALLERY -->
-    <div class="gallery">
-        <img src="{{ url_for('static', filename='images/a.JPG') }}" class="active">
-        <img src="{{ url_for('static', filename='images/b.JPG') }}">
-        <img src="{{ url_for('static', filename='images/c.JPG') }}">
-        <img src="{{ url_for('static', filename='images/d.JPG') }}">
-        <img src="{{ url_for('static', filename='images/e.JPG') }}">
-        <img src="{{ url_for('static', filename='images/f.JPG') }}">
-    </div>
+  <div class="gallery">
+    <img src="{{ url_for('static', filename='images/a.JPG') }}" class="active">
+    <img src="{{ url_for('static', filename='images/b.JPG') }}">
+    <img src="{{ url_for('static', filename='images/c.JPG') }}">
+    <img src="{{ url_for('static', filename='images/d.JPG') }}">
+    <img src="{{ url_for('static', filename='images/e.JPG') }}">
+    <img src="{{ url_for('static', filename='images/f.JPG') }}">
+    <img src="{{ url_for('static', filename='images/g.JPG') }}">
+  </div>
 
-    <!-- BOOKING FORM PREVIEW -->
-    <div class="form-container">
-        <h2>Book Your Stay</h2>
-        <form method="POST" action="/booking">
-            <label for="name">Name</label>
-            <input type="text" name="name" required>
+  <div class="content">
+    <h1>Welcome to MCO Residence</h1>
+    <p>Book your perfect stay with us.</p>
+    <a href="/booking" class="button">Book Now</a>
+  </div>
 
-            <label for="email">Email</label>
-            <input type="email" name="email" required>
+  <script>
+    let current = 0;
+    const images = document.querySelectorAll(".gallery img");
 
-            <label for="cell">Cell Number</label>
-            <input type="text" name="cell" required>
-
-            <label for="booking_type">Booking Type</label>
-            <select name="booking_type" required>
-                <option value="">-- Select --</option>
-                <option value="1_hour">1 Hour - R150</option>
-                <option value="2_hour">2 Hours - R250</option>
-                <option value="night">Per Night - R450/night</option>
-            </select>
-
-            <label for="checkin_date">Check-in Date & Time</label>
-            <input type="datetime-local" name="checkin_date" required>
-
-            <label for="checkout_date">Check-out Date (if night booking)</label>
-            <input type="date" name="checkout_date">
-
-            <label for="pickup">Do you need pickup?</label>
-            <select name="pickup" required>
-                <option value="no">No</option>
-                <option value="yes_sasol">Yes - Sasol Garage</option>
-                <option value="yes_engen">Yes - Engen Garage</option>
-            </select>
-
-            <label for="special_note">Special Notes</label>
-            <textarea name="special_note" rows="3"></textarea>
-
-            <button type="submit">Proceed to Payment</button>
-        </form>
-    </div>
-
-    <script>
-        let current = 0;
-        const images = document.querySelectorAll('.gallery img');
-
-        function showNext() {
-            images[current].classList.remove('active');
-            current = (current + 1) % images.length;
-            images[current].classList.add('active');
-        }
-
-        setInterval(showNext, 5000); // 5 seconds
-    </script>
+    setInterval(() => {
+      images[current].classList.remove("active");
+      current = (current + 1) % images.length;
+      images[current].classList.add("active");
+    }, 5000);
+  </script>
 </body>
 </html>
