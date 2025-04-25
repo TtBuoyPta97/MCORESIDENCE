@@ -72,7 +72,6 @@
             const bankDetails = document.getElementById("bank_details");
             const uploadSection = document.getElementById("upload_section");
 
-            // Show bank details and file upload only for manual payment
             if (paymentMethod === "manual") {
                 bankDetails.style.display = "block";
                 uploadSection.style.display = "block";
@@ -94,11 +93,20 @@
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required>
 
-        <label for="date">Booking Date:</label>
+        <label for="date">Check-in Date:</label>
         <input type="date" id="date" name="date" required>
+
+        <label for="checkout_date">Check-out Date:</label>
+        <input type="date" id="checkout_date" name="checkout_date" required>
 
         <label for="time">Booking Time:</label>
         <input type="time" id="time" name="time" required>
+
+        <label for="rooms">Number of Rooms:</label>
+        <input type="number" id="rooms" name="rooms" min="1" max="10" value="1" required>
+
+        <label for="court">Book Court:</label>
+        <input type="checkbox" id="court" name="court" value="yes"> Yes
 
         <label for="payment_method">Payment Method:</label>
         <select id="payment_method" name="payment_method" onchange="showBankDetails()" required>
@@ -106,7 +114,6 @@
             <option value="manual">Manual Payment</option>
         </select>
 
-        <!-- Show banking details if manual payment is selected -->
         <div id="bank_details" class="bank-details">
             <h3>Banking Details for Manual Payment:</h3>
             <p><strong>Amangcikwa Holdings PTY Ltd.</strong></p>
@@ -114,7 +121,6 @@
             <p><strong>Bank:</strong> Standard Bank</p>
         </div>
 
-        <!-- File Upload Section for Manual Payment -->
         <div id="upload_section" class="upload-section">
             <label for="payment_proof">Proof of Payment (for manual payment):</label>
             <input type="file" name="payment_proof" accept=".pdf, .png, .jpg, .jpeg">
