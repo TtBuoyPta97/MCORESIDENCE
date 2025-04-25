@@ -1,15 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Booking Successful</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='booking-style.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Booking Success - MCO Residence</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      color: green;
+    }
+    .button {
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      display: inline-block;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Booking Confirmed!</h1>
-        <p>Thank you for your booking. A confirmation email has been sent to you.</p>
-        <a href="{{ url_for('homepage') }}">Return to Home</a>
-    </div>
+
+  <h1>Booking Successful!</h1>
+  <p>Your booking has been successfully processed. You will be redirected to the homepage in a few seconds.</p>
+  
+  <a href="/" class="button">Go to Homepage</a>
+
+  <script>
+    // Redirect to home after 5 seconds
+    setTimeout(function() {
+      window.location.href = "/";
+    }, 5000);
+  </script>
+
 </body>
 </html>
