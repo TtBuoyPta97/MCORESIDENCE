@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Booking Summary</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+    <header>
+        <h1>Booking Summary</h1>
+    </header>
+
+    <main>
+        <p><strong>Name:</strong> {{ name }}</p>
+        <p><strong>Email:</strong> {{ email }}</p>
+        <p><strong>Booking Type:</strong> {{ booking_type }}</p>
+        <p><strong>Check-in:</strong> {{ checkin }}</p>
+        <p><strong>Check-out:</strong> {{ checkout }}</p>
+        <p><strong>Pickup:</strong> {{ pickup }}</p>
+        {% if pickup_location %}
+        <p><strong>Pickup Location:</strong> {{ pickup_location }}</p>
+        {% endif %}
+        <p><strong>Early Check-in:</strong> {{ early_checkin }}</p>
+        {% if special_note %}
+        <p><strong>Special Notes:</strong> {{ special_note }}</p>
+        {% endif %}
+        <p><strong>Total Amount:</strong> R{{ total }}</p>
+
+        <p><strong>Note:</strong> No pets allowed.</p>
+
+        {% if payment_method == 'online' %}
+        <a href="{{ payment_link }}">
+            <button>Proceed to Pay (Online)</button>
+        </a>
+        {% else %}
+        <p>Please ensure your payment proof is uploaded. We'll contact you shortly via email and WhatsApp.</p>
+        <a href="{{ whatsapp_link }}">
+            <button>Chat with Us on WhatsApp</button>
+        </a>
+        {% endif %}
+    </main>
+</body>
+</html>
